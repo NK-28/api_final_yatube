@@ -41,19 +41,22 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class FollowSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
-        read_only=True, slug_field='username',
+        read_only=True,
+        slug_field='username',
         default=serializers.CurrentUserDefault())
     following = serializers.SlugRelatedField(
-        queryset=User.objects.all(), slug_field='username')
+        queryset=User.objects.all(),
+        slug_field='username')
 
     class Meta:
         model = Follow
         fields = '__all__'
         validators = [
-            UniqueTogetherValidator(queryset=Follow.objects.all(),
-                                    fields=('user', 'following'),
-                                    message='Вы уже подписаны!'
-                                    )
+            UniqueTogetherValidator(
+                queryset=Follow.objects.all(),
+                fields=('user', 'following'),
+                message='Вы уже подписаны!'
+            )
         ]
 
     def validate(self, data):

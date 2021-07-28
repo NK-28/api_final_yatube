@@ -6,6 +6,7 @@ from rest_framework import filters, viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
+from rest_framework import mixins
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -43,7 +44,13 @@ class CommentViewSet(viewsets.ModelViewSet):
         return post.comments.all()
 
 
-class FollowViewSet(viewsets.ModelViewSet):
+class CreateListViewSet(mixins.CreateModelMixin,
+                        mixins.ListModelMixin, viewsets.GenericViewSet):
+
+    pass
+
+
+class FollowViewSet(CreateListViewSet):
     serializer_class = FollowSerializer
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
     filter_backends = (filters.SearchFilter,)
